@@ -5,6 +5,16 @@ const { Productos } = require("../model/productos");
 const { Tendero } = require("../model/tendero");
 const auth = require("../middleware/auth");
 //ruta
+// listar todos los productos
+router.get("/lista", auth, async (req, res) => {
+	// se Buscar el usuario
+	const tendero = await Tendero.findById(req.tendero._id);
+	// si no existe el usuario
+	if (!tendero) return res.status(400).send("El tendero no existe en BD");
+	// si el usuario existe
+	const producto = await Productos.find({ idTendero: req.tendero._id });
+	res.send(producto);
+})
 router.post("/", auth, async (req, res) => {
 	// se obtiene el id del tendero autenticado
 	const tendero = await Tendero.findById(req.tendero._id);
